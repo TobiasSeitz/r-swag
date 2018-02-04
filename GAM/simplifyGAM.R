@@ -50,5 +50,10 @@ function(model,d){
   # final step: assemble the formula
   nFormula = as.formula(nFormulaString)
   # and make the gam.
-  gam(nFormula,data=d)
+  model <- gam(nFormula,data=d)
+  # optional, but recommended:
+  # add a pointer to the data to the model
+  # visreg, e.g., needs this to extract residuals.
+  model$data <- d
+  model
 }
