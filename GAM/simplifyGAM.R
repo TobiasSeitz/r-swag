@@ -17,7 +17,7 @@ extractParameterFromSmoother <- function(x){gsub("\\)","",gsub("s\\(","",x))}
 #   model: GAM object (from gam() of the mgcv package)
 #   d: data frame to run the new gam() function on. 
 # returns: gam object
-function(model,d){
+simplifyGAM <- function(model,d){
   mSummary <- summary(model) # gives us everything we need to re-do the model.
   # smoothed variables are the rownames of this table.
   mSmoothedFrame <- as.data.frame(mSummary$s.table);
