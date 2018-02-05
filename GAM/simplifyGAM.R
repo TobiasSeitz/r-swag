@@ -41,7 +41,10 @@ simplifyGAM <- function(model,d){
   mLinearPredictors <- unname(mLinearPredictors) # for some reason the name persists... #TODO
   
   # compile the right hand of the formula by merging the three vectors.
-  nRightHand <- c(mParametricRows, mLinearPredictors,mCurveRows)
+  # Attention: The order is super important. 
+  #   mParametricRows is likely to contain the name of a dichotomous nominal factor variable. 
+  #   
+  nRightHand <- c(mLinearPredictors, mCurveRows, mParametricRows)
   
   # concatenate the right hand with a "+""
   nFormulaString <- paste(nRightHand, collapse=" + ")
