@@ -67,8 +67,7 @@ plotGAM <-
     # basic plot setup with the smooths data
     predictorPlot <- ggplot(predictorSmooths, aes(x, smooth))
     controlPlot <- ggplot(controlSmooths, aes(x, smooth))
-    rating-overall-b5.pdf
-rating-overall-control.pdf
+    
     # residuals can get very visually heavy, so it sometimes is a good idea to hide them. 
     # this is done through the plotResiduals flag
     if (plotResiduals) {
