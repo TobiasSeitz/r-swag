@@ -1,5 +1,15 @@
 # r-swag 😎
 
+## password-strength
+Swag to plot guessability statistics and more. 
+
+### `plotGuessNumbers()`
+Creates a CMU-style guessability plot.
+
+**Example Output**
+![GAM example plot](img/guess-number-plot.png)
+
+
 ## GAM
 Swag for generalized additive models. 
 
@@ -21,7 +31,7 @@ Look at the function signature and its documentation for further paramters and o
 
 
 **Example Output:**
-![GAM example plot](img/gam.jpg)
+![GAM example plot](img/gam-v2.png)
 
 ### `simplifyModel()`
 The purpose of this function is to model any predictor as linear where the estimated degrees of freedom of the smooth term is 1. Doing so gives you a better model coefficient for this predictor. 
