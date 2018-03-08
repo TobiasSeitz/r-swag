@@ -32,3 +32,17 @@ savePlot <- function(plot,filename,width=10,height=3,path=NULL){
   embed_fonts(file=fullpath, outfile=fullpath)
   paste("Saved plot to",fullpath)
 }
+
+## dependency on plotGAM.R! and savePlot.
+generatePDF <- function(model, 
+                        controlVariables,
+                        predictors,
+                        prefix.predictors = "model-predictors-", 
+                        prefix.control = "model-controls-", 
+                        path = "graphs", 
+                        xLab.predictors = NULL,...){
+  dependent <- all.vars(model$formula)[1]
+  autoPlots <- plotGAM(model,controlVariables=controlVariables, predictors=predictors, yLab = dependent, xLab.predictors=xLab.predictors) 
+  savePlot(autoPlots[[1]],paste0(prefix.predictors,dependent,".pdf"),path=path,...)
+  savePlot(autoPlots[[2]],paste0(prefix.control,dependent,".pdf"),path=path,...)
+}

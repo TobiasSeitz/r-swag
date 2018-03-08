@@ -1,8 +1,21 @@
-### plot GAM
+### GAM utility.
 ### author: Tobi Seitz - tobi@tobitobi.de
 ### (c) 2018
 
 library(mgcv)
+
+### wraps a given predictor name with a smooth function
+# 	p: name of the predictor (or anything you need smoothed)
+# 	k: polynomial degree of smooth term. 
+smoothPredictors <- function(p,k=NULL){
+  if(is.null(k)){
+    p <- paste0("s(",p,")")  
+  }
+  else {
+    p <- paste0("s(",p,",k=",k,")")  
+  }
+  p
+}
 
 # if we use a smoothening function in a formula, we need to strip that from the column name later
 # to get the original variable name. 
@@ -59,4 +72,35 @@ simplifyGAM <- function(model,d){
   # visreg, e.g., needs this to extract residuals.
   model$data <- d
   model
+}
+
+# Gives a GAM based on a dependent variable, a vector of predictors and control variable, 
+# and a vector of the control variables you want smoothed, so you can use it in lapply(..) and alike.
+#   column: name of the column in d that holds outcome / response / dependent variable.
+#   predictors: column names of predictor
+#   controls: name of control variables
+#   d: data frame (wide form) to run the new gam() function on. 
+#   controls.smoothed: names of control variables that need smoothing.
+#   k: maximum polynomial degree of smooth terms.
+# returns: gam object
+getGAM <- function(column, predictors, controls, d, k=NULL, select=FALSE, controls.smoothed = NULL, ...){
+  # attention: to avoid weird collapses of the universe, make sure to have a continuous variable as first variable.
+  # having a binary factor first breaks all kinds of things later.
+  # you have been warned.
+  smoothedPredictors <- lapply(predictors,smoothPredictors,k=k)
+  smoothedControls <- lapply(controls, function(var){
+    if(!is.null(controls.smoothed) & var %in% controls.smoothed){
+      c <- smoothPredictors(var,k=k)
+    } else {
+      c <- as.character(var)
+    }
+    c
+  })
+  concatPredictors = paste(smoothedPredictors,collapse = "+")
+  concatControls = paste(smoothedControls,collapse = "+")
+  rightHand <- paste(concatPredictors, concatControls, sep = "+");
+  autoFormula <- as.formula(paste(column,rightHand,sep = "~"))
+  # see https://stat.ethz.ch/R-manual/R-devel/library/mgcv/html/gam.selection.html
+  m <- gam(autoFormula, select = select, data=d, ...); # adding method="REML" results in less magic.  
+  m
 }
